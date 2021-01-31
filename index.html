@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my apps</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <button onclick="toggleOverlay()">Click me, - Popup</button>
+  <button onclick="appendToast()">Show Toast</button>
+
+  <div class="overlay" onclick="toggleOverlay()">
+    <div class="content" onclick="event.stopPropagation()">
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt architecto nihil quas rerum, ipsa quae temporibus esse soluta similique, ipsum atque quisquam nisi! Vel vitae nam molestiae asperiores animi adipisci.
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt architecto nihil quas rerum, ipsa quae temporibus esse soluta similique, ipsum atque quisquam nisi! Vel vitae nam molestiae asperiores animi adipisci.
+      <br><br>
+      <b>Click anywhere to get rid of me!</b>
+    </div>
+  </div>
+
+  <div class="toast-container">
+    
+  </div>
+
+
+
+  <script>
+    const $ = selector => {
+      return document.querySelector(selector)
+    }
+
+    const toggleOverlay = () => {
+      $('.overlay').classList.toggle("show")
+    }
+
+    const appendToast = (message = '', howMany = 1) => {
+
+      for (let i = 1; i <= howMany; i++) {
+        const countMessages = $('.toast-container').children.length + 1
+
+        const toast = document.createElement('div')
+        toast.classList.add("toast", "hide")
+        toast.innerHTML = `
+          <span class="message hide">
+            ${message || `Hey! you've got <b>${countMessages}</b> new <a href="/#">notifications</a>`}
+          </span>
+          <button class="close" onclick="removeToast(this.parentElement)">X</button>
+        `
+
+        $('.toast-container').appendChild(toast)
+        setTimeout(() => {
+          toast.classList.remove("hide")
+        }, 50)
+      }
+    }
+
+    const removeToast = toast => {
+      toast.classList.add('hide')
+      setTimeout(() => {
+        toast.remove()
+      }, 400)
+    }
+  </script>
+</body>
+</html>
