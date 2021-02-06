@@ -6,36 +6,86 @@
   <title>my apps</title>
   <link rel="stylesheet" href="index.css">
 </head>
-<body>
-  <button onclick="toggleOverlay()">Click me, - Popup</button>
-  <button onclick="appendToast()">Show Toast</button>
-
-  <div class="overlay" onclick="toggleOverlay()">
-    <div class="content" onclick="event.stopPropagation()">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt architecto nihil quas rerum, ipsa quae temporibus esse soluta similique, ipsum atque quisquam nisi! Vel vitae nam molestiae asperiores animi adipisci.
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt architecto nihil quas rerum, ipsa quae temporibus esse soluta similique, ipsum atque quisquam nisi! Vel vitae nam molestiae asperiores animi adipisci.
-      <br><br>
-      <b>Click anywhere to get rid of me!</b>
-    </div>
+<body onkeyup="listenKeyboardPress(event)">
+  <div class="actions">
+    <button onclick="toggleModal()">Show Empty Modal</button>
+    <button onclick="appendToast()">Show Toast</button>
+    <button onclick="fetchAndShowUsers()">Fetch And Show Users</button>
   </div>
 
-  <div class="toast-container">
-    
+  <div class="modal" onclick="toggleModal()">
+    <div class="modal-content" onclick="event.stopPropagation()"></div>
   </div>
 
-
+  <div class="toast-container"></div>
 
   <script>
     const $ = selector => {
       return document.querySelector(selector)
     }
 
-    const toggleOverlay = () => {
-      $('.overlay').classList.toggle("show")
+    const toggleModal = (clearContent = true) => {
+      const showAdded = $('.modal').classList.toggle("show")
+
+      if (! showAdded && clearContent) {
+        clearModalContent()
+      }
+    }
+    const showModal = () => {
+      $('.modal').classList.add('show')
+    }
+    const hideModal = (clearContent = true) => {
+      $('.modal').classList.remove("show")
+
+      if (clearContent) clearModalContent()
+    }
+    const clearModalContent = () => {
+      setTimeout(() => $('.modal-content').textContent = '', 200)
     }
 
-    const appendToast = (message = '', howMany = 1) => {
+    const fetchAndShowUsers = async () => {
+      try {
+        const response = await fetch('users.json')
+        const { users } = await response.json()
 
+        showUsersModal(users)
+      } catch (error) {
+        console.error(error);
+      } finally {
+        console.log('Im Done here');
+      }
+    }
+
+    const showUsersModal = users => {
+      $('.modal-content').innerHTML = `
+        <h2>List of Users</h2>
+
+        ${users.map(({ name, email, age, isActive }) => {
+          return `
+            <ul>
+              <li>Name : <b>${name}</b></li>
+              <li>Email : <b>${email}</b></li>
+              <li>Age : <b>${age}</b></li>
+              <li>
+                Status : <b class="${! isActive ? 'text-danger' : 'text-success'}"> 
+                  ${! isActive? 'In' : ''}active
+                </b>
+              </li>
+            </ul>
+            <hr>
+          `
+        }).join("")}
+      `
+      showModal()
+    }
+
+    const listenKeyboardPress = e => {
+      if (e.code === "Escape") {
+        hideModal()
+      }
+    }
+
+    const appendToast = (message = '', howMany = 1, timeToHide = 4500) => {
       for (let i = 1; i <= howMany; i++) {
         const countMessages = $('.toast-container').children.length + 1
 
@@ -45,17 +95,15 @@
           <span class="message hide">
             ${message || `Hey! you've got <b>${countMessages}</b> new <a href="/#">notifications</a>`}
           </span>
-          <button class="close" onclick="removeToast(this.parentElement)">X</button>
+          <button class="close" onclick="hideToast(this.parentElement)">X</button>
         `
-
         $('.toast-container').appendChild(toast)
-        setTimeout(() => {
-          toast.classList.remove("hide")
-        }, 50)
+
+        setTimeout(() => toast.classList.remove("hide"), 50)
+        setTimeout(() => hideToast(toast), timeToHide)
       }
     }
-
-    const removeToast = toast => {
+    const hideToast = toast => {
       toast.classList.add('hide')
       setTimeout(() => {
         toast.remove()

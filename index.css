@@ -10,13 +10,30 @@ body {
   font-family: 'Poppins', sans-serif;
   height: 100vh;
 }
-a {
-  text-decoration: none;
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+ul { list-style: none; }
+
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 15rem;
 }
-a:hover {
-  text-decoration: underline;
+button {
+  background: none;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: .2s all;
+  border-radius: 4px;
 }
-.overlay {
+button:hover {
+  color: #fff;
+  background: #ccc;
+}
+
+.modal {
   position: fixed;
   background-color: rgba(0, 0, 0, .6);
   top: 0;
@@ -30,7 +47,7 @@ a:hover {
   visibility: hidden;
 }
 
-.overlay .content {
+.modal .modal-content {
   background-color: #fafafa;
   width: 600px;
   max-width: 90%;
@@ -46,7 +63,7 @@ a:hover {
   visibility: visible;
 }
 
-.show .content {
+.show .modal-content {
   margin-top: 0;
 }
 
@@ -89,11 +106,13 @@ a:hover {
   border: none;
 }
 
+.text-danger {
+  color: #d81616;
+}
 
-
-
-
-
+.text-success {
+  color: #25c941;
+}
 
 
 

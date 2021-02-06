@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "name": "John Doe",
+      "email": "johndoe@corpo.com",
+      "age": 24,
+      "isActive": true
+    },
+    {
+      "name": "Jane Mary",
+      "email": "janemary@corpo.com",
+      "age": 25,
+      "isActive": true
+    },
+    {
+      "name": "Aqshal Zakki",
+      "email": "aqshal.dev@corpo.com",
+      "age": 18,
+      "isActive": false
+    }
+  ]
+}
